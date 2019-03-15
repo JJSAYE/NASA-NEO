@@ -1,23 +1,18 @@
+import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style('whitegrid')
-# from sklearn.cluster import SpectralClustering, KMeans
 from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.mixture import GMM
-from sklearn import mixture
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-import numpy as np
-from optimal_K_number import K_graph
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
-df = pd.read_csv('asteroids.csv')
+df = pd.read_csv('/Users/jsaye/projects/datascience/NASA/asteroids.csv')
 print(df.hazardous.value_counts() / df.shape[0])
 
 def scatter(X, Y):
@@ -53,19 +48,18 @@ target = label_encoder.fit_transform(df['hazardous'])
 
 X1, X2, y1, y2 = train_test_split(features, target, train_size=.8, random_state=0)
 
-knn = KNeighborsClassifier(n_neighbors=3, algorithm='ball_tree', metric='manhattan')
-model = knn.fit(X1,y1)
-labels = knn.predict(X2)
+# knn = KNeighborsClassifier(n_neighbors=3, algorithm='ball_tree', metric='manhattan')
+# model = knn.fit(X1,y1)
+# labels = knn.predict(X2)
 
 # model = LogisticRegression(fit_intercept=True, solver='liblinear', class_weight={1:2})
 # model.fit(X1, y1)
 # labels = model.predict(X2)
 
-# K_graph(X1, y1, knn)
+model = RandomForestClassifier(n_estimators=200)
+model.fit(X1,y1)
+labels = model.predict(X2)
 
-# GMM = mixture.GaussianMixture(n_components=2, covariance_type='diag', init_params='kmeans', random_state=1993)
-# model = GMM.fit(X1)
-# labels = model.predict(X2)
 
 scatter('magnitude', 'velocity')
 
