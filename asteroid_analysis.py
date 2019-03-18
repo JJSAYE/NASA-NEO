@@ -6,11 +6,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style('whitegrid')
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 
 df = pd.read_csv('/Users/jsaye/projects/datascience/NASA/asteroids.csv')
 print(df.hazardous.value_counts() / df.shape[0])
@@ -56,12 +57,15 @@ X1, X2, y1, y2 = train_test_split(features, target, train_size=.8, random_state=
 # model.fit(X1, y1)
 # labels = model.predict(X2)
 
-model = RandomForestClassifier(n_estimators=200)
-model.fit(X1,y1)
+# model = RandomForestClassifier(n_estimators=200)
+# model.fit(X1,y1)
+# labels = model.predict(X2)
+
+model = SVC(gamma='scale', decision_function_shape='ovo')
+model.fit(X1, y1)
 labels = model.predict(X2)
 
-
-scatter('magnitude', 'velocity')
+# scatter('magnitude', 'velocity')
 
 mat = confusion_matrix(y2, labels)
 sns.heatmap(
